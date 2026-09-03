@@ -1,0 +1,20 @@
+A scatter chart (scatter plot) is a graph that displays the relationship between two numerical variables. Each point on the chart represents one observation, with one value plotted on the X-axis and the other on the Y-axis. It helps identify patterns, trends, clusters, and possible correlations.
+
+Use Case -> A hospital wants to know if there's a relationship between a patient's age and their recovery time after surgery.
+
+Advantages -> 
+Easy to see if two things go up/down together
+Shows every single data point, nothing is hidden or averaged
+Easy to spot the "odd one out" (like one super old coaster that's really fast)
+Works fine even with lots of data points
+
+Disadvantages -> 
+Only works with numbers (can't use it for things like names or categories)
+Too many dots close together can look messy and hard to read
+Just because two things look related on the chart doesn't mean one causes the other
+Harder for people who aren't used to reading charts to understand at a glance
+
+Why to use scatter chart for this example?
+You have 50 roller coasters, each with two numeric values: Year Opened (1932–2007) and Speed (26.8–80 mph).
+Scatter charts are specifically designed for exactly this — two numeric variables where you want to see if there's a relationship (e.g., "do newer coasters tend to be faster?").
+50 data points is a good amount — enough to spot a pattern, but not so many that the chart gets cluttered/unreadable.

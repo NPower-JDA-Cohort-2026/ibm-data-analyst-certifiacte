@@ -1,0 +1,13 @@
+﻿Customer_ID,Age,Gender,City,Income,Visits ,Avg_Spend,Purchased,Signup_Date
+C001,25,Female ,Toronto ,52000,5,45.5 ,Yes,10-01-2025
+C002,34,Male,Toronto,68000,8,72.3,No,15-01-2025
+C003,29,Female,Brampton ,55000,6,61.2,Yes,20-01-2025
+C004,42,Male ,Mississauga,82000,12,95,Yes,01-02-2025
+C005,31,Female,Toronto,NaN,4,38.5,No,05-02-2025
+C006,31,Female,Toronto,61000,7,55.75,Yes,08-02-2025
+C007,150,Male,Brampton,59000,5,49,No,10-02-2025
+C008,27,Male,Toronto,47000,3,35.25,No,12-02-2025
+C009,36,Male,Toronto,71000,10,88.4,Yes,15-02-2025
+C010 ,29,Female,Brampton,54000,6,NaN,Yes,18-02-2025
+C011 ,34,Male,Toronto,68000,8,72.3,No,15-01-2025
+C012,24,Female,Toronto,45000,2,29.99,No,20-02-2025

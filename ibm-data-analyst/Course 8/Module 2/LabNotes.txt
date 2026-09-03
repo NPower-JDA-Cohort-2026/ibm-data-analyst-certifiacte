@@ -1,0 +1,290 @@
+----------------- Pie Charts ------------------------------
+Remove the text labels on the pie chart by passing in legend and add it as a seperate legend using plt.legend().
+Push out the percentages to sit just outside the pie chart by passing in pctdistance parameter.
+Pass in a custom set of colors for continents by passing in colors parameter.
+Explode the pie chart to emphasize the lowest three continents (Africa, North America, and Latin America and Caribbean) by passing in explode parameter.
+
+------------------Sub Plots --------------------------
+Subplots
+
+Often times we might want to plot multiple plots within the same figure. For example, we might want to perform a side by side comparison of the box plot with the line plot of China and India's immigration.
+
+To visualize multiple plots together, we can create a figure (overall canvas) and divide it into subplots, each containing a plot. With subplots, we usually work with the artist layer instead of the scripting layer.
+
+  fig = plt.figure() # create figure
+    ax = fig.add_subplot(nrows, ncols, plot_number) # create subplots
+
+fig = plt.figure() # create figure
+
+ax0 = fig.add_subplot(1, 2, 1) # add subplot 1 (1 row, 2 columns, first plot)
+ax1 = fig.add_subplot(1, 2, 2) # add subplot 2 (1 row, 2 columns, second plot). See tip below**
+
+# Subplot 1: Box plot
+df_CI.plot(kind='box', color='blue', vert=False, figsize=(20, 6), ax=ax0) # add to subplot 1
+ax0.set_title('Box Plots of Immigrants from China and India (1980 - 2013)')
+ax0.set_xlabel('Number of Immigrants')
+ax0.set_ylabel('Countries')
+
+# Subplot 2: Line plot
+df_CI.plot(kind='line', figsize=(20, 6), ax=ax1) # add to subplot 2
+ax1.set_title ('Line Plots of Immigrants from China and India (1980 - 2013)')
+ax1.set_ylabel('Number of Immigrants')
+ax1.set_xlabel('Years')
+
+plt.show()
+
+
+Tip regarding subplot convention
+
+In the case when nrows, ncols, and plot_number are all less than 10, a convenience exists such that a 3-digit number can be given instead, where the hundreds represent nrows, the tens represent ncols and the units represent plot_number. For instance,
+
+   subplot(211) == subplot(2, 1, 1) 
+produces a subaxes in a figure which represents the top plot (i.e. the first) in a 2 rows by 1 column notional grid (no grid actually exists, but conceptually this is how the returned subplot has been positioned).
+
+    
+# create a list of all years in decades 80's, 90's, and 00's
+years_80s = list(map(str, range(1980, 1990))) 
+years_90s = list(map(str, range(1990, 2000))) 
+years_00s = list(map(str, range(2000, 2010))) 
+
+# slice the original dataframe df_can to create a series for each decade
+df_80s = df_top15.loc[:, years_80s].sum(axis=1) 
+df_90s = df_top15.loc[:, years_90s].sum(axis=1) 
+df_00s = df_top15.loc[:, years_00s].sum(axis=1)
+
+# merge the three series into a new data frame
+new_df = pd.DataFrame({'1980s': df_80s, '1990s': df_90s, '2000s':df_00s}) 
+
+# display dataframe
+new_df.head()
+
+
+
+--- To Check the Equation of Best Fit --------------------
+x = df_tot['year']      # year on x-axis
+y = df_tot['total']     # total on y-axis
+fit = np.polyfit(x, y, deg=1)
+
+fit
+
+
+--------------Making Use of Regression Line-------------------------
+Using the equation of line of best fit, we can estimate the number of immigrants in 2015:
+
+No. Immigrants = 5567 * Year - 10926195
+No. Immigrants = 5567 * 2015 - 10926195
+No. Immigrants = 291,310
+
+
+----------------To Display Data for Few countrues ---------
+#The correct answer is:  
+    
+# create df_countries dataframe
+df_countries = df_can.loc[['Denmark', 'Norway', 'Sweden'], years].transpose()
+
+# create df_total by summing across three countries for each year
+df_total = pd.DataFrame(df_countries.sum(axis=1))
+
+# reset index in place
+df_total.reset_index(inplace=True)
+
+# rename columns
+df_total.columns = ['year', 'total']
+
+# change column year from string to int to create scatter plot
+df_total['year'] = df_total['year'].astype(int)
+
+# show resulting dataframe
+df_total.head()
+
+Click here for a sample python solution
+#The correct answer is:  
+    
+# generate scatter plot
+df_total.plot(kind='scatter', x='year', y='total', figsize=(10, 6), color='darkblue')
+
+# add title and label to axes
+plt.title('Immigration from Denmark, Norway, and Sweden to Canada from 1980 - 2013')
+plt.xlabel('Year')
+plt.ylabel('Number of Immigrants')
+
+# show plot
+plt.show()
+
+
+-------------Doule Bubble Chart ---------------
+# China
+ax0 = df_can_t.plot(kind='scatter',
+                    x='Year',
+                    y='China',
+                    figsize=(14, 8),
+                    alpha=0.5,                  # transparency
+                    color='green',
+                    s=norm_china * 2000 + 10,  # pass in weights 
+                    xlim=(1975, 2015)
+                    )
+
+# India
+ax1 = df_can_t.plot(kind='scatter',
+                    x='Year',
+                    y='India',
+                    alpha=0.5,
+                    color="blue",
+                    s=norm_india * 2000 + 10,
+                    ax = ax0
+                    )
+
+ax0.set_ylabel('Number of Immigrants')
+ax0.set_title('Immigration from China and India from 1980 - 2013')
+ax0.legend(['China', 'India'], loc='upper left', fontsize='x-large')
+
+-----Very Important While Plotting --------
+#Changing the index type to integer
+total_immigrants.index = total_immigrants.index.map(int)
+
+
+------------Change the look of the graph ------------------
+#Create figure and axes
+fig, ax = plt.subplots()
+
+#Changing the index type to integer
+total_immigrants.index = total_immigrants.index.map(int)
+
+# Customizing the appearance of Plot
+ax.plot(total_immigrants, 
+        marker='s', #Including markers in squares shapes
+        markersize=5, #Setting the size of the marker
+        color='green', #Changing the color of the line
+        linestyle="dotted") #Changing the line style to a Dotted line
+#Setting up the Title
+ax.set_title('Immigrants between 1980 to 2013') 
+
+#Setting up the Labels
+ax.set_xlabel('Years')
+ax.set_ylabel('Total Immigrants')
+ax.legend(['Immigrants'])
+
+plt.show()
+
+
+-- Building a country specific detailed line chart ---------------------
+Click here for a sample python solution
+#Creating data for plotting
+df_can.reset_index(inplace=True)
+haiti=df_can[df_can['Country']=='Haiti']
+
+#creating haiti with only years columns from 1980 - 2013 
+#and transposing to get the result as a series
+haiti=haiti[years].T
+
+#converting the index to type integer
+haiti.index = haiti.index.map(int)
+    
+#Plotting the line plot on the data
+fig, ax = plt.subplots()
+ax.plot(haiti)
+
+#Setting up the Title
+ax.set_title('Immigrants from Haiti between 1980 to 2013') 
+#Setting up the Labels
+ax.set_xlabel('Years')
+ax.set_ylabel('Number of Immigrants')
+#Enabling Grid
+#plt.grid(True)  #or ax.grid()
+#Legend
+plt.legend(["Immigrants"]) #or ax.legend()
+#Display the plot
+plt.show()
+
+--- Refer to the lab files to undertand better that how actually visualization works and how one can improve it. 
+
+------------------ Important to match the axis points to the graph visualization -----------------------------
+By default, the histrogram method breaks up the dataset into 10 bins. The figure below summarizes the bin ranges and the frequency distribution of immigration in 2013
+The hist function retuns list of arrays with 1. counts and 2. bins. we can fetch that using unpacking functionality
+and further use the bins as x-ticks
+
+
+
+-------------- Multiple Subplots --------
+# Create a figure with two axes in a row
+
+fig, axs = plt.subplots(1, 2, sharey=True)
+
+#Plotting in first axes - the left one
+axs[0].plot(total_immigrants)
+axs[0].set_title("Line plot on immigrants")
+
+#Plotting in second axes - the right one
+axs[1].scatter(total_immigrants.index, total_immigrants)
+axs[1].set_title("Scatter plot on immigrants")
+
+axs[0].set_ylabel("Number of Immigrants")
+            
+#Adding a Title for the Overall Figure
+fig.suptitle('Subplotting Example', fontsize=15)
+
+# Adjust spacing between subplots
+fig.tight_layout()
+
+
+# Show the figure
+plt.show()
+
+
+--- add_plot feature -------------------
+fig = plt.figure(figsize=(10, 10))
+
+# Add the first subplot (top-left)
+ax1 = fig.add_subplot(2, 2, 1)
+ax1.plot(total_immigrants)
+ax1.set_title('Plot 1 - Line Plot')
+
+# Add the second subplot (top-right)
+ax2 = fig.add_subplot(2, 2, 2)
+ax2.scatter(total_immigrants.index, total_immigrants)
+ax2.set_title('Plot 2 - Scatter plot')
+
+# Add the third subplot (bottom-left)
+ax3 = fig.add_subplot(2, 2, 3)
+ax3.hist(df_dns)
+ax3.set_title('Plot3 - Histogram') 
+ax3.set_xlabel('Number of Immigrants')
+ax3.set_ylabel('Number of Years')
+
+# Add the fourth subplot (bottom-right)
+ax4 = fig.add_subplot(2, 2, 4)
+ax4.pie(total_immigrants[0:5], labels=years[0:5], 
+        colors = ['gold','blue','lightgreen','coral','cyan'],
+        autopct='%1.1f%%')
+ax4.set_aspect('equal')  
+ax4.set_title('Plot 5 - Pie Chart')
+
+#Adding a Title for the Overall Figure
+fig.suptitle('Four Plots in a Figure Example', fontsize=15)
+
+# Adjust spacing between subplots
+fig.tight_layout()
+
+
+# Show the figure
+plt.show()
+
+
+---------Waffle Chart with PyWaffle Library --------------------
+#import Waffle from pywaffle
+from pywaffle import Waffle
+
+#Set up the Waffle chart figure
+
+fig = plt.figure(FigureClass = Waffle,
+                 rows = 20, columns = 30, #pass the number of rows and columns for the waffle 
+                 values = df_dsn['Total'], #pass the data to be used for display
+                 cmap_name = 'tab20', #color scheme
+                 legend = {'labels': [f"{k} ({v})" for k, v in zip(df_dsn.index.values,df_dsn.Total)],
+                            'loc': 'lower left', 'bbox_to_anchor':(0,-0.1),'ncol': 3}
+                 #notice the use of list comprehension for creating labels 
+                 #from index and total of the dataset
+                )
+
+#Display the waffle chart
+plt.show()

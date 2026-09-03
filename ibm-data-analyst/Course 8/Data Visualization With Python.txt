@@ -1,0 +1,253 @@
+Data Visualization With Python:-> 
+
+1. UN DataSet
+https://www.un.org/development/desa/pd/data/international-migration-flows
+
+2. # Forces full column-by-column breakdown
+df.info(verbose=True)
+
+3.Similarly, to get the list of indices we use the .index instance variables.
+
+4. Note: The main types stored in pandas objects are float, int, bool, datetime64[ns], datetime64[ns, tz], timedelta[ns], category, and object (string). In addition, these dtypes have item sizes, e.g. int64 and int32
+
+5. To Set the Index in the Data Frame 
+df_can.set_index('Country', inplace=True)
+# tip: The opposite of set is reset. So to reset the index, we can use df_can.reset_index()
+
+6. # optional: to remove the name of the index
+df_can.index.name = None
+
+7. df_can[df_can.index == 'Japan'] -- In more Structured Format
+
+8.    # 1. the full row data (all columns)
+    df_can.loc['Haiti']
+    #or
+    df_can[df_can.index == 'Haiti']
+
+    # 2. for year 2000
+    df_can.loc['Haiti', 2000]
+           
+    #  3. for years 1990 to 1995
+    df_can.loc['Haiti', [1990, 1991, 1992, 1993, 1994, 1995]]
+
+
+9. Column names that are integers (such as the years) might introduce some confusion. For example, when we are referencing the year 2013, one might confuse that when the 2013th positional index.
+
+df_can.columns = list(map(str, df_can.columns))
+# [print (type(x)) for x in df_can.columns.values] #<-- uncomment to check type of column headers
+
+10. Create a list named 'year' using map function for years ranging from 1990 to 2013.
+Then extract the data series from the dataframe df_can for Haiti using year list.
+
+#The correct answer is:
+    year = list(map(str, range(1990, 2014)))
+    haiti = df_can.loc['Haiti', year] # passing in years 1990 - 2013
+
+11.  Let's filter the dataframe to show the data on Asian countries (AreaName = Asia).
+
+condition = df_can['Continent'] == 'Asia'
+print(condition)-- display all clumns along with if it true or not
+df_canada[condition] -- only shows rows that matches the condition
+
+12. df_can[(df_can['Continent']=='Asia') & (df_can['Region']=='Southern Asia')]
+
+# note: When using 'and' and 'or' operators, pandas requires we use '&' and '|' instead of 'and' and 'or'
+
+13.
+df.sort_values(col_name, axis=0, ascending=True, inplace=False, ignore_index=False)
+
+14. df_can.sort_values(by='2010', ascending=False, axis=0, inplace=True)
+    top3_2010 = df_can['2010'].head(3)
+    top3_2010
+
+
+--------------Matplotlib -------------------
+One of the core aspects of Matplotlib is matplotlib.pyplot. It is Matplotlib's scripting layer which we studied in details in the videos about Matplotlib. Recall that it is a collection of command style functions that make Matplotlib work like MATLAB. Each pyplot function makes some change to a figure: e.g., creates a figure, creates a plotting area in a figure, plots some lines in a plotting area, decorates the plot with labels, etc. In this lab, we will work with the scripting layer to learn how to generate line plots. In future labs, we will get to work with the Artist layer as well to experiment first hand how it differs from the scripting layer.
+
+15. IMmportant
+
+Recall that pandas plots the indices on the x-axis and the columns as individual lines on the y-axis. Since df_CI is a dataframe with the country as the index and years as the columns, we must first transpose the dataframe using transpose() method to swap the row and columns.
+
+#The correct answer is:
+df_CI.index = df_CI.index.map(int) # let's change the index values of df_CI to type integer for plotting
+df_CI.plot(kind='line')
+
+plt.title('Immigrants from China and India')
+plt.ylabel('Number of Immigrants')
+plt.xlabel('Years')
+
+plt.show()
+
+#Why no need to transpose for Haiti 
+hat's because haiti is a series as opposed to a dataframe, and has the years as its indices as shown below.
+
+
+#The correct answer is:    
+#Step 1: Get the dataset. Recall that we created a Total column that calculates cumulative immigration by country. 
+#We will sort on this column to get our top 5 countries using pandas sort_values() method.
+    
+inplace = True # paramemter saves the changes to the original df_can dataframe
+df_can.sort_values(by='Total', ascending=False, axis=0, inplace=True)
+
+# get the top 5 entries
+df_top5 = df_can.head(5)
+
+# transpose the dataframe
+df_top5 = df_top5[years].transpose() 
+
+print(df_top5)
+
+
+#Step 2: Plot the dataframe. To make the plot more readeable, we will change the size using the `figsize` parameter.
+df_top5.index = df_top5.index.map(int) # let's change the index values of df_top5 to type integer for plotting
+df_top5.plot(kind='line', figsize=(14, 8)) # pass a tuple (x, y) size
+
+
+
+plt.title('Immigration Trend of Top 5 Countries')
+plt.ylabel('Number of Immigrants')
+plt.xlabel('Years')
+
+
+plt.show()
+
+
+
+
+------------Area Plots ------------------
+Area plots are stacked by default. And to produce a stacked area plot, each column must be either all positive or all negative values (any NaN, i.e. not a number, values will default to 0). To produce an unstacked plot, set parameter stacked to value False.
+
+df_top5.index = df_top5.index.map(int)
+df_top5.plot(kind='area',
+             stacked=False,
+             figsize=(20, 10))  # pass a tuple (x, y) size -- for size of the chart
+
+plt.title('Immigration Trend of Top 5 Countries')
+plt.ylabel('Number of Immigrants')
+plt.xlabel('Years')
+
+plt.show()
+
+
+For Artist Layer Implementation -> 
+ax = df_least5.plot(kind='area', alpha=0.55, stacked=False, figsize=(20, 10))
+    
+ax.set_title('Immigration Trend of 5 Countries with Least Contribution to Immigration')
+ax.set_ylabel('Number of Immigrants')
+ax.set_xlabel('Years')
+
+
+Side Note: We could use df_can['2013'].plot.hist(), instead. In fact, throughout this lesson, using some_data.plot(kind='type_plot', ...) is equivalent to some_data.plot.type_plot(...). That is, passing the type of the plot as argument or method behaves the same.
+
+See the pandas documentation for more info http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.plot.html.
+
+Tip: For a full listing of colors available in Matplotlib, run the following code in your python shell:
+
+import matplotlib
+for name, hex in matplotlib.colors.cnames.items():
+    print(name, hex)
+
+count, bin_edges = np.histogram(df_t, 15)
+xmin = bin_edges[0] - 10   #  first bin value is 31.0, adding buffer of 10 for aesthetic purposes 
+xmax = bin_edges[-1] + 10  #  last bin value is 308.0, adding buffer of 10 for aesthetic purposes
+
+# stacked Histogram
+df_t.plot(kind='hist',
+          figsize=(10, 6), 
+          bins=15,
+          xticks=bin_edges,
+          color=['coral', 'darkslateblue', 'mediumseagreen'],
+          stacked=True,
+          xlim=(xmin, xmax)
+         )
+
+plt.title('Histogram of Immigration from Denmark, Norway, and Sweden from 1980 - 2013')
+plt.ylabel('Number of Years')
+plt.xlabel('Number of Immigrants') 
+
+plt.show()
+
+
+
+-----------------Important Question -----------------------
+# create a dataframe of the countries of interest (cof)
+df_cof = df_can.loc[['Greece', 'Albania', 'Bulgaria'], years]
+
+# transpose the dataframe
+df_cof = df_cof.transpose() 
+
+# let's get the x-tick values
+count, bin_edges = np.histogram(df_cof, 15)
+
+# Un-stacked Histogram
+df_cof.plot(kind ='hist',
+            figsize=(10, 6),
+            bins=15,
+            alpha=0.35,
+            xticks=bin_edges,
+            color=['coral', 'darkslateblue', 'mediumseagreen']
+            )
+
+plt.title('Histogram of Immigration from Greece, Albania, and Bulgaria from 1980 - 2013')
+plt.ylabel('Number of Years')
+plt.xlabel('Number of Immigrants')
+
+plt.show()
+
+
+Tip -> Bar graphs usually represent numerical and categorical variables grouped in intervals.
+
+
+-----Adding Annotations to the Charts -------------------
+# Annotate arrow
+plt.annotate('',  # s: str. Will leave it blank for no text
+             xy=(32, 70),  # place head of the arrow at point (year 2012 , pop 70)
+             xytext=(28, 20),  # place base of the arrow at point (year 2008 , pop 20)
+             xycoords='data',  # will use the coordinate system of the object being annotated
+             arrowprops=dict(arrowstyle='->', connectionstyle='arc3', color='blue', lw=2)
+             )
+
+
+s: str, the text of annotation.
+xy: Tuple specifying the (x,y) point to annotate (in this case, end point of arrow).
+xytext: Tuple specifying the (x,y) point to place the text (in this case, start point of arrow).
+xycoords: The coordinate system that xy is given in - 'data' uses the coordinate system of the object being annotated (default).
+arrowprops: Takes a dictionary of properties to draw the arrow:
+arrowstyle: Specifies the arrow style, '->' is standard arrow.
+connectionstyle: Specifies the connection type. arc3 is a straight line.
+color: Specifies color of arrow.
+lw: Specifies the line width.
+
+
+
+-----------------------------------
+# annotate value labels to each country
+for index, value in enumerate(df_top15): 
+    label = format(int(value), ',') # format int with commas
+    
+    # place text at the end of bar (subtracting 47000 from x, and 0.1 from y to make it fit within the bar)
+    plt.annotate(label, xy=(value - 47000, index - 0.10), color='white')
+
+plt.show()
+
+
+--------------Pivot Chart Appllications ---------------
+Business Intelligence: Pivot charts help in summarizing complex business data, making it easier for stakeholders to make informed decisions.
+
+Finance: Analysts use pivot charts to visualize financial data, track performance metrics, and forecast trends.
+
+Marketing: Marketers leverage pivot charts to analyze campaign performance, customer demographics, and sales trends.
+
+Operations: Operational managers use pivot charts to monitor supply chain performance, inventory levels, and process efficiencies.
+
+Healthcare: Pivot charts assist in visualizing patient data, treatment outcomes, and operational efficiency in healthcare settings.
+
+
+
+---------------Detecting Outliers ---------------------
+# let's check how many entries fall above the outlier threshold 
+new_df=new_df.reset_index()
+new_df[new_df['2000s']> 209611
+
+
+
